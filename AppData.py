@@ -16,9 +16,11 @@ class AppData(QObject):
     def __init__(self):
         QObject.__init__(self)
 
-        self.__port = 1883;
-        self.__hostname = ""
-        self.__isConnected = False;
+        self.__port = 1883
+        self.__hostname = "localhost"
+        self.__isConnected = False
+
+        self.__topics = []
 
     #@Slot(result = int)
     def getPort(self):
@@ -57,3 +59,10 @@ class AppData(QObject):
     hostname = Property(str, getHostname, setHostname, notify=hostnameChanged)
     isConnected = Property(bool, getIsConnected, setIsConnected, notify=isConnectedChanged)
 
+    @Slot(str)
+    def addTopic(self, topic):
+        self.__topics.append(topic)
+
+    @Slot(str, result = int)
+    def getIndexByTopic(self, topic):
+        return self.__topics.index(topic)

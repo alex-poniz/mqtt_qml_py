@@ -13,19 +13,14 @@ ApplicationWindow {
 
     property list<Window> windowsList
 
-    // integration with Python backend
-    /*
-    AppData {
-        id: appData
-    } */
-
     Connections{
-        target: appData
-        function onResponsesChanged() {
-            console.log("qml: responsesChanged")
-            console.log("qml: currentIndex = " + appData.currentIndex)
-            var win = windowsList[appData.currentIndex];
-            win.outputText = appData.responses[appData.currentIndex];
+        target: appController
+        function onMessageReceived(topic, message) {
+            //console.log("qml: topic: " + topic + " message: " + message)
+
+            var index = appData.getIndexByTopic(topic)
+            var win = windowsList[index];
+            win.outputText += "<BR>" + message
         }
     }
 
@@ -62,8 +57,6 @@ ApplicationWindow {
 
     function topicDialogClosed(topicname)
     {
-        console.log("topicDialogClosed: begin")
-
         if (appController.subscribe_sync(topicname)) {
             var component = Qt.createComponent("TopicWindow.qml")
             if (component.status === Component.Ready) {
@@ -89,6 +82,7 @@ ApplicationWindow {
                Action {
                    text: qsTr("&Connect...")
                    onTriggered: showBrokerDialog();
+                   enabled: !appData.isConnected
                }
 
                Action {
@@ -98,7 +92,7 @@ ApplicationWindow {
                }
 
                Action {
-                   text: qsTr("&Add...")
+                   text: qsTr("&Subscribe...")
                    onTriggered: showTopicDialog();
                    enabled: appData.isConnected
                }
