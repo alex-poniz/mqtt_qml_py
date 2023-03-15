@@ -48,20 +48,4 @@ class AppController(QObject):
     @Slot(str, str)
     def onMessageReceived(self, topic, message):
         print("onMessageReceived: topic: " + topic + " message: " + message)
-
         self.messageReceived.emit(topic, message)
-
-        #topicIndex = self.__appData.getIndexByTopic(topic)
-
-        #responses = m_appData.m_responses[topicIndex];
-        #responses += "<BR>" + message;
-        #m_appData.m_responses[topicIndex] = responses;
-        #m_appData.setCurrentIndex(topicIndex);
-
-        #emit m_appData.responsesChanged();
-
-
-    #        void onMessageReceived(const QString& topic, const QString& message);
-    @Slot(str,str, result = bool)
-    def onInputTextChanged(self, topic, message):
-        return True

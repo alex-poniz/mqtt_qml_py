@@ -29,8 +29,12 @@ import QtQuick.Layouts 2.15
                     border.color: "black"
                 }
                 onTextChanged: {
-                    if (text !== "" && appController.onInputTextChanged(topicWindow.title, text)) {
-                        //text.clear();
+                    var fullLength = text.length;
+                    if (fullLength > 1 && text.endsWith('\n')) {
+                        var prevCRIndex = text.lastIndexOf('\n', fullLength - 2);
+                        var message = text.substring(prevCRIndex + 1, fullLength - 1);
+                        console.log("Sending message '" + message + "' to topic " + topicWindow.title);
+                        appController.publish_string(topicWindow.title, message);
                     }
                 }
             }

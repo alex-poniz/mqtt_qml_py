@@ -43,8 +43,10 @@ class MqttCommunicator(QObject):
         self.connected.emit(rc)
 
     def onMessage(self, client, userdata, message):
-        print("Received message '" + str(message.payload) + "' on topic '" + message.topic)
-        self.messageReceived.emit(message.topic, str(message.payload))
+        encoding = 'utf-8'
+        strMessage = message.payload.decode(encoding)
+        print("Received message '" + strMessage + "' on topic '" + message.topic)
+        self.messageReceived.emit(message.topic, strMessage)
 
 
     def connectToBroker(self, hostname, port):
