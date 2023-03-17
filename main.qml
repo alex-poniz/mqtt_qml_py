@@ -16,12 +16,21 @@ ApplicationWindow {
     Connections{
         target: appController
         function onMessageReceived(topic, message) {
-            //console.log("qml: topic: " + topic + " message: " + message)
-
             var index = appData.getIndexByTopic(topic)
             var win = windowsList[index];
             win.outputText += "<BR>" + message
         }
+    }
+
+    function publishMessage() {
+        if (appController.publish_string(topicTextField.text, messageTextField.text)) {
+            topicTextField.clear()
+            messageTextField.clear()
+        }
+    }
+
+    function disconnect() {
+        appController.disconnect()
     }
 
     function showBrokerDialog() {
@@ -86,8 +95,8 @@ ApplicationWindow {
                }
 
                Action {
-                   text: qsTr("&Disconnect...")
-                   onTriggered: disconnect('');
+                   text: qsTr("&Disconnect")
+                   onTriggered: disconnect();
                    enabled: appData.isConnected
                }
 
@@ -131,17 +140,13 @@ ApplicationWindow {
             id: messageTextField
             enabled: appData.isConnected
             Layout.fillWidth: true
+            onAccepted: publishMessage()
         }
 
         Button {
             text: "Publish"
             enabled: appData.isConnected
-            onClicked: {
-                if (appController.publish_string(topicTextField.text, messageTextField.text)) {
-                    topicTextField.clear()
-                    messageTextField.clear()
-                }
-            }
+            onClicked: publishMessage()
         }
     }
 

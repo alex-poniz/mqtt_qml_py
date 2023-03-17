@@ -11,6 +11,10 @@ Dialog {
     TextField {
         id: textContainer
         focus: true
+        onAccepted: {
+            dialogAccepted(textContainer.text)
+            topicDialogID.close()
+        }
     }
 
     onAccepted: {

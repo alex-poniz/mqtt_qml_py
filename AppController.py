@@ -15,6 +15,7 @@ class AppController(QObject):
         self.__appData = appData
         self.__client = MqttCommunicator(client_name)
         self.__client.messageReceived.connect(self.onMessageReceived)
+        self.__client.disconnected.connect(self.onDisconnected)
 
     @Slot(result = bool)
     def connectToBroker(self):
@@ -27,6 +28,10 @@ class AppController(QObject):
 
         self.__appData.isConnected = ret
         return ret
+
+    @Slot()
+    def disconnect(self):
+        self.__client.disconnect()
 
     @Slot(str, result = bool)
     def subscribe_sync(self, topic):
@@ -49,3 +54,7 @@ class AppController(QObject):
     def onMessageReceived(self, topic, message):
         print("onMessageReceived: topic: " + topic + " message: " + message)
         self.messageReceived.emit(topic, message)
+
+    @Slot(int)
+    def onDisconnected(self, rc):
+        self.__appData.isConnected = False

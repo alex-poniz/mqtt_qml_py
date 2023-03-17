@@ -12,6 +12,7 @@ def threadFunc(client):
 
 class MqttCommunicator(QObject):
     connected = Signal(int)
+    disconnected = Signal(int)
     messageReceived = Signal(str, str)
 
     def __init__(self, client_id):
@@ -20,6 +21,7 @@ class MqttCommunicator(QObject):
         self.__client = mqtt_client.Client(client_id)
         self.__client.on_log = self.onLog
         self.__client.on_connect = self.onConnect
+        self.__client.on_disconnect = self.onDisconnect
         self.__client.on_subscribe = self.onSubscribe
         self.__client.on_message = self.onMessage
         #client.username_pw_set(username, password)
@@ -42,6 +44,13 @@ class MqttCommunicator(QObject):
 
         self.connected.emit(rc)
 
+    def onDisconnect(self, client, userdata, rc):
+        print("Called onDisconnect()")
+        if (rc != mqtt_client.MQTT_ERR_SUCCESS):
+            print("Unexpected disconnection!!!")
+
+        self.disconnected.emit(rc)
+
     def onMessage(self, client, userdata, message):
         encoding = 'utf-8'
         strMessage = message.payload.decode(encoding)
@@ -52,6 +61,9 @@ class MqttCommunicator(QObject):
     def connectToBroker(self, hostname, port):
         self.__client.connect(hostname, port)
         self.startMqttLoop()
+
+    def disconnect(self):
+        self.__client.disconnect()
 
     def subscribe(self, topic):
         ret = self.__client.subscribe(topic)
