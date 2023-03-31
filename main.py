@@ -22,7 +22,7 @@ if __name__ == "__main__":
     qmlContext.setContextProperty("appData", appData);
     qmlContext.setContextProperty("appController", appController);
 
-    qml_file = Path(__file__).resolve().parent / "main.qml"
+    qml_file = Path(__file__).resolve().parent / "mqtt_qml_gui/main.qml"
     engine.load(qml_file)
 
 

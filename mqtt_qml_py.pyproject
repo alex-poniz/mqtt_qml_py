@@ -1,3 +1,3 @@
 {
-    "files": ["AppData.py","AppController.py","BrokerDialog.qml","TopicDialog.qml","main.py","main.qml","TopicWindow.qml","MqttCommunicator.py"]
+    "files": ["MqttCommunicator.py","main.py","mqtt_qml_gui/TopicWindow.qml","mqtt_qml_gui/BrokerDialog.qml","mqtt_qml_gui/TopicDialog.qml","mqtt_qml_gui/main.qml","AppData.py","AppController.py"]
 }
